@@ -161,8 +161,14 @@ def reset_embedding(embed_func: Callable[[str], list[float]]):
             for id_, chunk_ in rows:
                 emb = embed_func(chunk_)
                 cur.execute('UPDATE documents SET embed = %s::vector WHERE id = %s', (emb, id_))
-                
 
+def delete_sample(sample_id: int):
+    '''根据指定id删除samples表中的记录 返回是否有记录被删除'''
+    with psycopg.connect(conn_str) as conn:
+        with conn.cursor() as cur:
+            cur.execute("DELETE FROM samples WHERE id = %s;", (sample_id,))
+            return (not cur.rowcount == 0)
+                
 
 
 

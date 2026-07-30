@@ -9,7 +9,7 @@ import os
 import uvicorn
 from utility.embedding import get_embedding, lora_fine_tune
 from utility.pg import (get_similar_chunks, make_samples, clear_samples, get_training_samples, 
-                        reset_embedding)
+                        reset_embedding, delete_sample)
 from pathlib import Path
 
 app = FastAPI(title="LLM API")
@@ -49,6 +49,17 @@ async def check_dataset():
     data = get_training_samples()
     return data
 
+@app.get("/api/delete_sample")
+async def delete_sample_api(request: Request):
+    '''删除某个训练样本'''
+    data = dict(request.query_params)
+    sample_id = data.get('sample_id', None)
+    if sample_id is None:
+        return {'state': 0}
+    else:
+        is_success = delete_sample(sample_id=sample_id)
+        return {'state': int(is_success)}
+
 
 @app.get("/api/start_lora_train")
 async def start_lora_train():
@@ -66,7 +77,6 @@ async def reset_embed():
         return get_embedding([chunk])[0]
     reset_embedding(embed_func=get_single_emb)
     
-
 
 @app.get("/api/reset_sample")
 async def reset_sample():
