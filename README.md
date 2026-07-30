@@ -21,7 +21,7 @@ git clone https://github.com/NarKa-Yu/rag-ai-system.git
 cd rag-ai-system
 ```
 
-2. ##配置.env环境变量##
+2. **配置.env环境变量**
 
 ```bash
 HF_TOKEN=huggingface的token，配置后可让embedding模型初次下载更快
